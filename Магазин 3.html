@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Linzy_uz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+}
+
+/* HEADER */
+header {
+  background: #fff;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+header img { width: 60px; }
+
+.header-center {
+  text-align: center;
+  flex: 1;
+}
+
+h1 { margin: 0; font-size: 32px; }
+
+.slogan { color: #777; font-size: 14px; }
+
+.call-btn {
+  background: #000;
+  color: #fff;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 20px;
+}
+
+/* SLIDER */
+.slider {
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+}
+
+.slides {
+  display: flex;
+  height: 100%;
+  transition: transform 0.6s ease;
+}
+
+.slide {
+  min-width: 100%;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* SECTION */
+section {
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+/* CATEGORY */
+.category {
+  background: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.category:nth-child(even) { background: #fdfdfd; }
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.arrow {
+  font-size: 22px;
+  transition: transform 0.3s ease;
+}
+
+.category.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* PRODUCTS */
+.products {
+  display: none;
+  margin-top: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.product {
+  background: #f5f5f5;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.product img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.price {
+  padding: 10px;
+  font-weight: bold;
+}
+
+/* FULLSCREEN IMAGE */
+.fullscreen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.fullscreen img {
+  max-width: 95%;
+  max-height: 95%;
+}
+
+/* FOOTER */
+footer {
+  background: #111;
+  color: #fff;
+  text-align: center;
+  padding: 30px 20px;
+}
+
+footer a {
+  color: #fff;
+  margin: 0 10px;
+  text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="logo.png">
+  <div class="header-center">
+    <h1>Linzy_uz</h1>
+    <div class="slogan">Онлайн магазин контактных линз</div>
+  </div>
+  <a class="call-btn" href="tel:+998945429860">Позвонить</a>
+</header>
+
+<!-- SLIDER -->
+<div class="slider">
+  <div class="slides" id="slides">
+    <div class="slide"><img src="banner1.jpg"></div>
+    <div class="slide"><img src="banner2.jpg"></div>
+    <div class="slide"><img src="banner3.jpg"></div>
+  </div>
+</div>
+
+<section>
+
+<div class="category">
+  <div class="category-header" onclick="toggleCategory(this)">
+    <h2>MAGISTER</h2>
+    <span class="arrow">⌄</span>
+  </div>
+  <div class="products">
+    <div class="product"><img src="icy cray.jpg"><div class="price">105 000 сумм</div></div>
+    <div class="product"><img src="graphite.jpg"><div class="price">105 000 сумм</div></div>
+    <div class="product"><img src="quartz.jpg"><div class="price">105 000 сумм</div></div>
+    <div class="product"><img src="mel.jpg"><div class="price">105 000 сумм</div></div>
+    <div class="product"><img src="ochre.jpg"><div class="price">105 000 сумм</div></div>
+    <div class="product"><img src="avela.jpg"><div class="price">105 000 сумм</div></div>
+    <div class="product"><img src="crystal.jpg"><div class="price">105 000 сумм</div></div>
+    <div class="product"><img src="topaz.jpg"><div class="price">105 000 сумм</div></div>
+    <div class="product"><img src="amber.jpg"><div class="price">105 000 сумм</div></div>
+  </div>
+</div>
+
+<div class="category">
+  <div class="category-header" onclick="toggleCategory(this)">
+    <h2>UYAAI</h2>
+    <span class="arrow">⌄</span>
+  </div>
+  <div class="products">
+    <div class="product"><img src="apex gray.jpg"><div class="price">120 000 сумм</div></div>
+    <div class="product"><img src="apex green.jpg"><div class="price">120 000 сумм</div></div>
+    <div class="product"><img src="apex blue.jpg"><div class="price">120 000 сумм</div></div>
+    <div class="product"><img src="aoki raquelle.jpg"><div class="price">120 000 сумм</div></div>
+    <div class="product"><img src="aoki blue.jpg"><div class="price">120 000 сумм</div></div>
+  </div>
+</div>
+
+<div class="category">
+  <div class="category-header" onclick="toggleCategory(this)">
+    <h2>YIMEIXI</h2>
+    <span class="arrow">⌄</span>
+  </div>
+  <div class="products">
+    <div class="product"><img src="blue.jpg"><div class="price">120 000 сумм</div></div>
+    <div class="product"><img src="green.jpg"><div class="price">120 000 сумм</div></div>
+  </div>
+</div>
+
+</section>
+
+<footer>
+  <p>Мы в соцсетях</p>
+  <a href="https://www.instagram.com/linzy.tashkent">Instagram</a>
+  <a href="https://wa.me/998945429860">WhatsApp</a>
+  <a href="https://t.me/linzy_uzb">Telegram</a>
+</footer>
+
+<script>
+/* CATEGORY */
+function toggleCategory(header) {
+  const category = header.parentElement;
+  const products = category.querySelector('.products');
+  category.classList.toggle('open');
+  products.style.display = products.style.display === 'grid' ? 'none' : 'grid';
+}
+
+/* FULLSCREEN IMAGE */
+document.addEventListener('click', e => {
+  if (e.target.tagName === 'IMG' && e.target.closest('.product')) {
+    const fs = document.createElement('div');
+    fs.className = 'fullscreen';
+    fs.innerHTML = `<img src="${e.target.src}">`;
+    fs.onclick = () => fs.remove();
+    document.body.appendChild(fs);
+  }
+});
+
+/* SLIDER */
+let slides = document.getElementById('slides');
+let index = 0;
+let total = slides.children.length;
+let timer;
+
+function move() {
+  index = (index + 1) % total;
+  slides.style.transform = `translateX(-${index * 100}%)`;
+}
+
+function start() {
+  timer = setInterval(move, 8000);
+}
+
+function stop() {
+  clearInterval(timer);
+}
+
+start();
+
+/* TOUCH CONTROL */
+let startX = 0;
+slides.addEventListener('touchstart', e => {
+  stop();
+  startX = e.touches[0].clientX;
+});
+
+slides.addEventListener('touchend', e => {
+  let endX = e.changedTouches[0].clientX;
+  if (startX - endX > 50) move();
+  if (endX - startX > 50) {
+    index = (index - 1 + total) % total;
+    slides.style.transform = `translateX(-${index * 100}%)`;
+  }
+  start();
+});
+</script>
+
+</body>
+</html>
