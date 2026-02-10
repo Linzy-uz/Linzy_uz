@@ -1,166 +1,227 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Felis Lenses</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f9f9f9;
-}
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+  }
 
-/* HEADER */
-header {
-  background: #fff;
-  padding: 20px 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
+  /* HEADER */
+  header {
+    background: #fff;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
 
-header img { width: 60px; }
+  header img { width: 60px; }
 
-.header-center {
-  text-align: center;
-  flex: 1;
-}
+  .header-center {
+    text-align: center;
+    flex: 1;
+  }
 
-h1 { margin: 0; font-size: 32px; }
+  h1 { margin: 0; font-size: 32px; }
 
-.slogan { color: #777; font-size: 14px; }
+  .slogan { color: #777; font-size: 14px; }
 
-.call-btn {
-  background: #000;
-  color: #fff;
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 20px;
-}
+  .call-btn {
+    background: #000;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 20px;
+  }
 
-/* SLIDER */
-.slider {
-  width: 100%;
-  height: 320px;
-  overflow: hidden;
-}
+  /* SLIDER (2:1, responsive) */
+  .slider {
+    width: min(100%, 1100px);
+    aspect-ratio: 2 / 1; /* 2048x1024, 600x300 и т.п. */
+    margin: 20px auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #000;
+    user-select: none;
+    touch-action: pan-y; /* свайп по X ловим, по Y — прокрутка страницы */
+  }
 
-.slides {
-  display: flex;
-  height: 100%;
-  transition: transform 0.6s ease;
-}
+  .slides {
+    display: flex;
+    height: 100%;
+    transition: transform 0.55s ease-in-out;
+    will-change: transform;
+  }
 
-.slide {
-  min-width: 100%;
-}
+  .slide {
+    min-width: 100%;
+    height: 100%;
+  }
 
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* не режет баннер */
+    background: #000;
+    display: block;
+  }
 
-/* SECTION */
-section {
-  max-width: 1100px;
-  margin: auto;
-  padding: 40px 20px;
-}
+  /* STORY PROGRESS (как в сторис) */
+  .progress {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+  }
 
-/* CATEGORY */
-.category {
-  background: #fff;
-  border: 2px solid #e5e5e5;
-  border-radius: 14px;
-  margin-bottom: 20px;
-  padding: 20px;
-}
+  .progress .bar {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 3px;
+    overflow: hidden;
+  }
 
-.category:nth-child(even) { background: #fdfdfd; }
+  .progress .fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: #fff;
+  }
 
-.category-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-}
+  /* SECTION */
+  section {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px 20px 40px;
+  }
 
-.arrow {
-  font-size: 22px;
-  transition: transform 0.3s ease;
-}
+  /* CATEGORY */
+  .category {
+    background: #fff;
+    border: 2px solid #e5e5e5;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    padding: 18px 20px;
+  }
 
-.category.open .arrow {
-  transform: rotate(180deg);
-}
+  .category:nth-child(even) { background: #fdfdfd; }
 
-/* PRODUCTS */
-.products {
-  display: none;
-  margin-top: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 15px;
-}
+  .category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    gap: 12px;
+  }
 
-.product {
-  background: #f5f5f5;
-  border-radius: 10px;
-  overflow: hidden;
-  text-align: center;
-}
+  .category-header h2 {
+    margin: 0;
+    font-size: 20px;
+  }
 
-.product img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  cursor: pointer;
-}
+  .arrow {
+    font-size: 22px;
+    transition: transform 0.25s ease;
+  }
 
-.price {
-  padding: 10px;
-  font-weight: bold;
-}
+  .category.open .arrow { transform: rotate(180deg); }
 
-/* FULLSCREEN IMAGE */
-.fullscreen {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
+  /* PRODUCTS */
+  .products {
+    display: none;
+    margin-top: 16px;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
 
-.fullscreen img {
-  max-width: 95%;
-  max-height: 95%;
-}
+  .category.open .products { display: grid; }
 
-/* FOOTER */
-footer {
-  background: #111;
-  color: #fff;
-  text-align: center;
-  padding: 30px 20px;
-}
+  .product {
+    background: #f5f5f5;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+  }
 
-footer a {
-  color: #fff;
-  margin: 0 10px;
-  text-decoration: none;
-}
+  .product img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    cursor: pointer;
+    display: block;
+  }
+
+  .price {
+    padding: 10px 10px 12px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .old-price {
+    color: #d80000;
+    text-decoration: line-through;
+    font-weight: 600;
+    opacity: 0.95;
+  }
+
+  .new-price {
+    color: #111;
+    font-weight: 800;
+  }
+
+  /* FULLSCREEN IMAGE */
+  .fullscreen {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    cursor: pointer;
+  }
+
+  .fullscreen img {
+    max-width: 95%;
+    max-height: 95%;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #111;
+    color: #fff;
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  footer a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+  }
 </style>
 </head>
 
 <body>
 
 <header>
-  <img src="logo.png">
+  <img src="logo.png" alt="Логотип">
   <div class="header-center">
     <h1>Felis Lenses</h1>
     <div class="slogan">Онлайн магазин контактных линз</div>
@@ -169,127 +230,334 @@ footer a {
 </header>
 
 <!-- SLIDER -->
-<div class="slider">
+<div class="slider" id="slider">
+  <div class="progress" id="progress"></div>
+
   <div class="slides" id="slides">
-    <div class="slide"><img src="banner1.jpg"></div>
-    <div class="slide"><img src="banner2.jpg"></div>
-    <div class="slide"><img src="banner3.jpg"></div>
+    <div class="slide"><img src="banner1.jpg" alt="Баннер 1"></div>
+    <div class="slide"><img src="banner2.jpg" alt="Баннер 2"></div>
+    <div class="slide"><img src="banner3.jpg" alt="Баннер 3"></div>
   </div>
 </div>
 
 <section>
 
-<div class="category">
-  <div class="category-header" onclick="toggleCategory(this)">
-    <h2>MAGISTER</h2>
-    <span class="arrow">⌄</span>
+  <div class="category">
+    <div class="category-header">
+      <h2>MAGISTER</h2>
+      <span class="arrow">⌄</span>
+    </div>
+    <div class="products">
+      <div class="product">
+        <img src="icy cray.jpg" alt="Icy Cray">
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="graphite.jpg" alt="Graphite">
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="quartz.jpg" alt="Quartz">
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="mel.jpg" alt="Mel">
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="ochre.jpg" alt="Ochre">
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="avela.jpg" alt="Avela">
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="crystal.jpg" alt="Crystal">
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="topaz.jpg" alt="Topaz">
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="amber.jpg" alt="Amber">
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
+      </div>
+    </div>
   </div>
-  <div class="products">
-    <div class="product"><img src="icy cray.jpg"><div class="price">105 000 сумм</div></div>
-    <div class="product"><img src="graphite.jpg"><div class="price">105 000 сумм</div></div>
-    <div class="product"><img src="quartz.jpg"><div class="price">105 000 сумм</div></div>
-    <div class="product"><img src="mel.jpg"><div class="price">105 000 сумм</div></div>
-    <div class="product"><img src="ochre.jpg"><div class="price">105 000 сумм</div></div>
-    <div class="product"><img src="avela.jpg"><div class="price">105 000 сумм</div></div>
-    <div class="product"><img src="crystal.jpg"><div class="price">105 000 сумм</div></div>
-    <div class="product"><img src="topaz.jpg"><div class="price">105 000 сумм</div></div>
-    <div class="product"><img src="amber.jpg"><div class="price">105 000 сумм</div></div>
+
+  <div class="category">
+    <div class="category-header">
+      <h2>UYAAI</h2>
+      <span class="arrow">⌄</span>
+    </div>
+    <div class="products">
+      <div class="product">
+        <img src="apex gray.jpg" alt="Apex Gray">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="apex green.jpg" alt="Apex Green">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="apex gray.jpg" alt="Apex Gray">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="aoki blue.jpg" alt="Aoki blue">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="aoki raquelle.jpg" alt="Aoki raquelle">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="aoki Caramel .jpg" alt="Aoki Caramel ">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="aoki Grey.jpg" alt="Aoki Grey">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="shikamaru Brown.jpg" alt="Shikamaru Brown">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="K4 Violet.jpg" alt="K4 Violet">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="K4 Blue .jpg" alt="K4 Blue ">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="K4 Gray.jpg" alt="K4 Gray">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="K4 Brown.jpg" alt="K4 Brown">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="Stacie.jpg" alt="Stacie">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="Fog Peal Gray.jpg" alt="Fog Peal Gray">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+    </div>
   </div>
-</div>
 
 <div class="category">
-  <div class="category-header" onclick="toggleCategory(this)">
-    <h2>UYAAI</h2>
-    <span class="arrow">⌄</span>
+    <div class="category-header">
+      <h2>MILK CREEK</h2>
+      <span class="arrow">⌄</span>
+    </div>
+    <div class="products">
+      <div class="product">
+        <img src="Night Magics.jpg" alt="Night Magics">
+        <div class="price"><span class="old-price">140 000 сум</span><span class="new-price">84 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="Gullah Rome.jpg" alt="Gullah Rome">
+        <div class="price"><span class="old-price">140 000 сум</span><span class="new-price">84 000 сум</span></div>
+      </div>
+    </div>
   </div>
-  <div class="products">
-    <div class="product"><img src="apex gray.jpg"><div class="price">120 000 сумм</div></div>
-    <div class="product"><img src="apex green.jpg"><div class="price">120 000 сумм</div></div>
-    <div class="product"><img src="apex blue.jpg"><div class="price">120 000 сумм</div></div>
-    <div class="product"><img src="aoki raquelle.jpg"><div class="price">120 000 сумм</div></div>
-    <div class="product"><img src="aoki blue.jpg"><div class="price">120 000 сумм</div></div>
-  </div>
-</div>
 
 <div class="category">
-  <div class="category-header" onclick="toggleCategory(this)">
-    <h2>YIMEIXI</h2>
-    <span class="arrow">⌄</span>
+    <div class="category-header">
+      <h2>FRESH GO</h2>
+      <span class="arrow">⌄</span>
+    </div>
+    <div class="products">
+      <div class="product">
+        <img src="Flame Blue.jpg" alt="Flame Blue">
+        <div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="Nonno Green.jpg" alt="Nonno Green">
+        <div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div>
+      </div>
+    </div>
   </div>
-  <div class="products">
-    <div class="product"><img src="blue.jpg"><div class="price">120 000 сумм</div></div>
-    <div class="product"><img src="green.jpg"><div class="price">120 000 сумм</div></div>
+
+<div class="category">
+    <div class="category-header">
+      <h2>KSSEYE</h2>
+      <span class="arrow">⌄</span>
+    </div>
+    <div class="products">
+      <div class="product">
+        <img src="Clacler Brown.jpg" alt="Clacler Brown">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+      <div class="product">
+        <img src="Clacler Blue.jpg" alt="Clacler Blue">
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
+      </div>
+    </div>
   </div>
-</div>
 
 </section>
 
 <footer>
   <p>Мы в соцсетях</p>
-  <a href="https://www.instagram.com/linzy.tashkent">Instagram</a>
-  <a href="https://wa.me/998945429860">WhatsApp</a>
-  <a href="https://t.me/linzy_uzb">Telegram</a>
+  <a href="https://www.instagram.com/linzy.tashkent" target="_blank" rel="noopener">Instagram</a>
+  <a href="https://wa.me/998945429860" target="_blank" rel="noopener">WhatsApp</a>
+  <a href="https://t.me/linzy_uzb" target="_blank" rel="noopener">Telegram</a>
 </footer>
 
 <script>
-/* CATEGORY */
-function toggleCategory(header) {
-  const category = header.parentElement;
-  const products = category.querySelector('.products');
-  category.classList.toggle('open');
-  products.style.display = products.style.display === 'grid' ? 'none' : 'grid';
-}
+/* =========================
+   CATEGORIES (open/close)
+   ========================= */
+document.querySelectorAll('.category-header').forEach(header => {
+  header.addEventListener('click', () => {
+    header.parentElement.classList.toggle('open');
+  });
+});
 
-/* FULLSCREEN IMAGE */
+/* =========================
+   FULLSCREEN IMAGE
+   ========================= */
 document.addEventListener('click', e => {
-  if (e.target.tagName === 'IMG' && e.target.closest('.product')) {
+  const img = e.target;
+  if (img && img.tagName === 'IMG' && img.closest('.product')) {
+    e.stopPropagation();
     const fs = document.createElement('div');
     fs.className = 'fullscreen';
-    fs.innerHTML = `<img src="${e.target.src}">`;
-    fs.onclick = () => fs.remove();
+    fs.innerHTML = `<img src="${img.src}" alt="Фото">`;
+    fs.addEventListener('click', () => fs.remove());
     document.body.appendChild(fs);
   }
 });
 
-/* SLIDER */
-let slides = document.getElementById('slides');
-let index = 0;
-let total = slides.children.length;
-let timer;
+/* =========================
+   SLIDER + STORY PROGRESS
+   ========================= */
+const slidesEl = document.getElementById('slides');
+const sliderEl = document.getElementById('slider');
+const progressEl = document.getElementById('progress');
 
-function move() {
-  index = (index + 1) % total;
-  slides.style.transform = `translateX(-${index * 100}%)`;
+const total = slidesEl.children.length;
+let index = 0;
+
+const durationMs = 8000;
+
+let rafId = null;
+let lastTs = 0;
+let elapsedMs = 0;
+let paused = false;
+
+/* create bars */
+for (let i = 0; i < total; i++) {
+  const bar = document.createElement('div');
+  bar.className = 'bar';
+  const fill = document.createElement('span');
+  fill.className = 'fill';
+  bar.appendChild(fill);
+  progressEl.appendChild(bar);
+}
+
+function paintProgress() {
+  const fills = progressEl.querySelectorAll('.fill');
+  fills.forEach((f, i) => {
+    if (i < index) f.style.width = '100%';
+    else if (i > index) f.style.width = '0%';
+    else {
+      const pct = Math.min(100, (elapsedMs / durationMs) * 100);
+      f.style.width = pct + '%';
+    }
+  });
+}
+
+function setSlide(i) {
+  index = (i + total) % total;
+  slidesEl.style.transform = `translateX(-${index * 100}%)`;
+  elapsedMs = 0;
+  lastTs = 0;
+  paintProgress();
+}
+
+function tick(ts) {
+  if (paused) {
+    rafId = requestAnimationFrame(tick);
+    return;
+  }
+  if (!lastTs) lastTs = ts;
+  const delta = ts - lastTs;
+  lastTs = ts;
+
+  elapsedMs += delta;
+
+  if (elapsedMs >= durationMs) {
+    setSlide(index + 1); // строго вправо
+  } else {
+    paintProgress();
+  }
+
+  rafId = requestAnimationFrame(tick);
 }
 
 function start() {
-  timer = setInterval(move, 8000);
+  if (rafId) cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(tick);
 }
 
-function stop() {
-  clearInterval(timer);
-}
+function pause() { paused = true; }
+function resume() { paused = false; lastTs = 0; }
 
-start();
-
-/* TOUCH CONTROL */
+/* Swipe + hold-to-pause */
 let startX = 0;
-slides.addEventListener('touchstart', e => {
-  stop();
+let isDragging = false;
+
+sliderEl.addEventListener('touchstart', (e) => {
+  pause();
+  isDragging = true;
   startX = e.touches[0].clientX;
 });
 
-slides.addEventListener('touchend', e => {
-  let endX = e.changedTouches[0].clientX;
-  if (startX - endX > 50) move();
-  if (endX - startX > 50) {
-    index = (index - 1 + total) % total;
-    slides.style.transform = `translateX(-${index * 100}%)`;
-  }
-  start();
+sliderEl.addEventListener('touchend', (e) => {
+  if (!isDragging) return;
+  isDragging = false;
+
+  const endX = e.changedTouches[0].clientX;
+  const diff = startX - endX;
+
+  if (diff > 50) setSlide(index + 1);
+  else if (diff < -50) setSlide(index - 1);
+
+  resume();
 });
+
+sliderEl.addEventListener('mousedown', (e) => {
+  pause();
+  isDragging = true;
+  startX = e.clientX;
+});
+
+window.addEventListener('mouseup', (e) => {
+  if (!isDragging) return;
+  isDragging = false;
+
+  const endX = e.clientX;
+  const diff = startX - endX;
+
+  if (diff > 50) setSlide(index + 1);
+  else if (diff < -50) setSlide(index - 1);
+
+  resume();
+});
+
+/* INIT */
+setSlide(0);
+start();
 </script>
 
 </body>
 </html>
-
