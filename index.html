@@ -9,52 +9,317 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
+  :root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --surface-soft: #f3f4f7;
+    --text: #161616;
+    --muted: #777;
+    --border: #e5e7eb;
+    --shadow: 0 8px 28px rgba(0,0,0,0.08);
+    --header-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    --footer-bg: #111;
+    --footer-text: #fff;
+    --accent: #111;
+    --overlay: rgba(10, 10, 12, 0.42);
+  }
+
+  body.dark {
+    --bg: #0e1014;
+    --surface: #171a21;
+    --surface-soft: #1f2430;
+    --text: #f3f4f6;
+    --muted: #a8afbd;
+    --border: #2e3441;
+    --shadow: 0 10px 34px rgba(0,0,0,0.35);
+    --header-shadow: 0 2px 14px rgba(0,0,0,0.28);
+    --footer-bg: #090b0f;
+    --footer-text: #eef2ff;
+    --accent: #f5f5f5;
+    --overlay: rgba(0, 0, 0, 0.58);
+  }
+
+  * { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f9f9f9;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  a, button {
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* HEADER */
   header {
-    background: #fff;
-    padding: 20px 30px;
+    background: var(--surface);
+    padding: 18px 22px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    gap: 16px;
+    box-shadow: var(--header-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
   }
 
-  header img { width: 60px; }
+  header img {
+    width: 56px;
+    flex-shrink: 0;
+  }
 
   .header-center {
     text-align: center;
     flex: 1;
+    min-width: 0;
   }
 
-  h1 { margin: 0; font-size: 32px; }
+  h1 {
+    margin: 0;
+    font-size: clamp(24px, 4vw, 32px);
+    color: var(--text);
+  }
 
-  .slogan { color: #777; font-size: 14px; }
+  .slogan {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 3px;
+  }
+
+  .menu-btn {
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 14px;
+    background: var(--surface-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.25s ease, transform 0.2s ease;
+  }
+
+  .menu-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .menu-btn .lines {
+    width: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .menu-btn .lines span {
+    display: block;
+    height: 2.5px;
+    width: 100%;
+    border-radius: 999px;
+    background: var(--text);
+    transition: transform 0.25s ease, opacity 0.25s ease, background 0.25s ease;
+  }
+
+  .menu-btn[aria-expanded="true"] .lines span:nth-child(1) {
+    transform: translateY(7.5px) rotate(45deg);
+  }
+
+  .menu-btn[aria-expanded="true"] .lines span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-btn[aria-expanded="true"] .lines span:nth-child(3) {
+    transform: translateY(-7.5px) rotate(-45deg);
+  }
+
+  /* DRAWER */
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    z-index: 90;
+  }
+
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(360px, 88vw);
+    height: 100vh;
+    background: var(--surface);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.16);
+    transform: translateX(100%);
+    transition: transform 0.28s ease, background 0.25s ease;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 18px 20px;
+  }
+
+  .drawer.open {
+    transform: translateX(0);
+  }
+
+  .drawer-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .drawer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .drawer-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .close-drawer {
+    border: 0;
+    background: var(--surface-soft);
+    color: var(--text);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 22px;
+  }
+
+  .drawer-card {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 14px;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+
+  .drawer-label {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .theme-switch {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .theme-icon-btn {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .theme-icon-btn.active {
+    color: var(--text);
+    transform: scale(1.08);
+  }
+
+  .theme-track {
+    position: relative;
+    height: 36px;
+    border-radius: 999px;
+    background: rgba(127, 127, 127, 0.15);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .theme-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    height: 28px;
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+
+  body.dark .theme-thumb {
+    transform: translateX(100%);
+  }
+
+  .drawer-link {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .drawer-link strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .drawer-link span {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .drawer-spacer {
+    flex: 1;
+  }
 
   .call-btn {
-    background: #000;
-    color: #fff;
-    padding: 10px 20px;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 14px 18px;
     text-decoration: none;
-    border-radius: 20px;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: 700;
+    display: block;
+    transition: opacity 0.2s ease;
   }
 
-  /* SLIDER (2:1, responsive) */
+  .call-btn:hover {
+    opacity: 0.92;
+  }
+
+  /* SLIDER */
   .slider {
     width: min(100%, 1100px);
-    aspect-ratio: 2 / 1; /* 2048x1024, 600x300 и т.п. */
+    aspect-ratio: 2 / 1;
     margin: 20px auto;
     position: relative;
     overflow: hidden;
     border-radius: 16px;
     background: #000;
     user-select: none;
-    touch-action: pan-y; /* свайп по X ловим, по Y — прокрутка страницы */
+    touch-action: pan-y;
+    box-shadow: var(--shadow);
   }
 
   .slides {
@@ -72,12 +337,11 @@
   .slide img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* не режет баннер */
+    object-fit: contain;
     background: #000;
     display: block;
   }
 
-  /* STORY PROGRESS (как в сторис) */
   .progress {
     position: absolute;
     top: 10px;
@@ -110,16 +374,19 @@
     padding: 20px 20px 40px;
   }
 
-  /* CATEGORY */
   .category {
-    background: #fff;
-    border: 2px solid #e5e5e5;
-    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
     margin-bottom: 20px;
     padding: 18px 20px;
+    box-shadow: var(--shadow);
+    transition: background 0.25s ease, border-color 0.25s ease;
   }
 
-  .category:nth-child(even) { background: #fdfdfd; }
+  .category:nth-child(even) {
+    background: color-mix(in srgb, var(--surface) 88%, var(--surface-soft) 12%);
+  }
 
   .category-header {
     display: flex;
@@ -137,11 +404,13 @@
   .arrow {
     font-size: 22px;
     transition: transform 0.25s ease;
+    color: var(--muted);
   }
 
-  .category.open .arrow { transform: rotate(180deg); }
+  .category.open .arrow {
+    transform: rotate(180deg);
+  }
 
-  /* PRODUCTS */
   .products {
     display: none;
     margin-top: 16px;
@@ -149,13 +418,21 @@
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 
-  .category.open .products { display: grid; }
+  .category.open .products {
+    display: grid;
+  }
 
   .product {
-    background: #f5f5f5;
-    border-radius: 10px;
+    background: var(--surface-soft);
+    border-radius: 12px;
     overflow: hidden;
     text-align: center;
+    border: 1px solid var(--border);
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+  }
+
+  .product:hover {
+    transform: translateY(-2px);
   }
 
   .product img {
@@ -184,11 +461,10 @@
   }
 
   .new-price {
-    color: #111;
+    color: var(--text);
     font-weight: 800;
   }
 
-  /* FULLSCREEN IMAGE */
   .fullscreen {
     position: fixed;
     inset: 0;
@@ -205,22 +481,54 @@
     max-height: 95%;
   }
 
-  /* FOOTER */
   footer {
-    background: #111;
-    color: #fff;
+    background: var(--footer-bg);
+    color: var(--footer-text);
     text-align: center;
     padding: 30px 20px;
+    transition: background 0.25s ease, color 0.25s ease;
   }
 
   footer a {
-    color: #fff;
+    color: var(--footer-text);
     margin: 0 10px;
     text-decoration: none;
   }
+
+  @media (max-width: 700px) {
+    header {
+      padding: 14px 16px;
+      gap: 10px;
+    }
+
+    header img {
+      width: 48px;
+    }
+
+    .slogan {
+      font-size: 12px;
+    }
+
+    .menu-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+    }
+
+    section {
+      padding: 16px 14px 34px;
+    }
+
+    .category {
+      padding: 16px;
+    }
+
+    .product img {
+      height: 180px;
+    }
+  }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -229,15 +537,47 @@
     <h1>Felis Lenses</h1>
     <div class="slogan">Онлайн магазин контактных линз</div>
   </div>
-  <a class="call-btn" href="tel:+998945429860">Позвонить</a>
+  <button class="menu-btn" id="menuBtn" type="button" aria-label="Открыть панель настроек" aria-controls="sideDrawer" aria-expanded="false">
+    <span class="lines"><span></span><span></span><span></span></span>
+  </button>
 </header>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="sideDrawer" aria-hidden="true">
+  <div class="drawer-top">
+    <div class="drawer-title">Панель</div>
+    <button class="close-drawer" id="closeDrawer" type="button" aria-label="Закрыть панель">×</button>
+  </div>
+
+  <div class="drawer-card">
+    <div class="drawer-label">Тема сайта</div>
+    <div class="theme-switch">
+      <button type="button" class="theme-icon-btn active" id="lightBtn" aria-label="Светлая тема">☀️</button>
+      <button type="button" class="theme-track" id="themeTrack" aria-label="Переключить тему">
+        <span class="theme-thumb"></span>
+      </button>
+      <button type="button" class="theme-icon-btn" id="darkBtn" aria-label="Тёмная тема">🌙</button>
+    </div>
+  </div>
+
+  <div class="drawer-card">
+    <a class="drawer-link" href="https://t.me/linzy_uzb" target="_blank" rel="noopener">
+      <strong>Карта лояльности</strong>
+      <span>@linzy_uzb</span>
+    </a>
+  </div>
+
+  <div class="drawer-spacer"></div>
+
+  <a class="call-btn" href="tel:+998945429860">Позвонить</a>
+</aside>
 
 <!-- SLIDER -->
 <div class="slider" id="slider">
   <div class="progress" id="progress"></div>
 
   <div class="slides" id="slides">
-    <div class="slide"><img src="banner1.png" alt="Баннер 1"></div>
+    <div class="slide"><img src="banner1.jpg" alt="Баннер 1"></div>
     <div class="slide"><img src="banner2.jpg" alt="Баннер 2"></div>
     <div class="slide"><img src="banner3.jpg" alt="Баннер 3"></div>
   </div>
@@ -248,60 +588,52 @@
   <div class="category">
     <div class="category-header">
       <h2>MAGISTER</h2>
-        <span class="arrow">⌄</span>
+      <span class="arrow">⌄</span>
     </div>
     <div class="products">
       <div class="product">
         <img src="sterling gray.jpg" alt="Sterling Gray">
-        <div class="price"><span class="old-price"></span><span class="new-price">115 000 сум</span></div>
+        <div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div>
       </div>
       <div class="product">
         <img src="icy cray.jpg" alt="Icy Cray">
-        <div class="price"><span class="old-price"></span><span class="new-price">105 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
       </div>
       <div class="product">
         <img src="graphite.jpg" alt="Graphite">
-        <div class="price"><span class="old-price"></span><span class="new-price">105 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
       </div>
       <div class="product">
         <img src="mel.jpg" alt="Mel">
-        <div class="price"><span class="old-price"></span><span class="new-price">105 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
       </div>
       <div class="product">
         <img src="ochre.jpg" alt="Ochre">
-        <div class="price"><span class="old-price"></span><span class="new-price">105 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
       </div>
       <div class="product">
         <img src="avela.jpg" alt="Avela">
-        <div class="price"><span class="old-price"></span><span class="new-price">105 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
       </div>
       <div class="product">
         <img src="crystal.jpg" alt="Crystal">
-        <div class="price"><span class="old-price"></span><span class="new-price">105 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
       </div>
       <div class="product">
         <img src="topaz.jpg" alt="Topaz">
-        <div class="price"><span class="old-price"></span><span class="new-price">105 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">73 500 сум</span></div>
       </div>
       <div class="product">
         <img src="amber.jpg" alt="Amber">
-        <div class="price"><span class="old-price"></span><span class="new-price">105 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">115 000 сум</span></div>
       </div>
       <div class="product">
         <img src="omg brown.jpg" alt="Omg Brown">
-        <div class="price"><span class="old-price"></span><span class="new-price">125 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">125 000 сум</span></div>
       </div>
       <div class="product">
         <img src="omg gray.jpg" alt="Omg Gray">
-        <div class="price"><span class="old-price"></span><span class="new-price">125 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="brown pluse.jpg" alt="Brown Pluse">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="black pluse.jpg" alt="Black Pluse">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
+        <div class="price"><span class="old-price">105 000 сум</span><span class="new-price">125 000 сум</span></div>
       </div>
     </div>
   </div>
@@ -312,173 +644,68 @@
       <span class="arrow">⌄</span>
     </div>
     <div class="products">
-      <div class="product">
-        <img src="shikamaru brown.jpg" alt="Shikamaru Brown">
-        <div class="price"><span class="old-price"></span><span class="new-price">90 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="fog ice gray.jpg" alt="Fog Ice Gray">
-        <div class="price"><span class="old-price"></span><span class="new-price">90 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="fog peal gray.jpg" alt="Fog Peal Gray">
-        <div class="price"><span class="old-price"></span><span class="new-price">90 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="dolly raquelle.jpg" alt="Dolly raquelle">
-        <div class="price"><span class="old-price"></span><span class="new-price">110 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="dolly stacie.jpg" alt="Dolly stacie">
-        <div class="price"><span class="old-price"></span><span class="new-price">110 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="apex blue.jpg" alt="Apex Blue">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="apex green.jpg" alt="Apex Green">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="apex gray.jpg" alt="Apex Gray">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="dolly teresa.jpg" alt="Dolly teresa">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="aoki caramel.jpg" alt="Aoki Caramel ">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="aoki gray.jpg" alt="Aoki Gray">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="big eye black.jpg" alt="Big Eye Black">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="k4 violet.jpg" alt="K4 Violet">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="k4 blue.jpg" alt="K4 Blue ">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="k4 gray.jpg" alt="K4 Gray">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="pattaya blue.jpg" alt="Pattaya Blue">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="diamonds brown.jpg" alt="Diamonds Brown">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
+      <div class="product"><img src="shikamaru brown.jpg" alt="Shikamaru Brown"><div class="price"><span class="old-price">90 000 сум</span><span class="new-price">45 000 сум</span></div></div>
+      <div class="product"><img src="fog ice gray.jpg" alt="Fog Ice Gray"><div class="price"><span class="old-price">90 000 сум</span><span class="new-price">45 000 сум</span></div></div>
+      <div class="product"><img src="fog peal gray.jpg" alt="Fog Peal Gray"><div class="price"><span class="old-price">90 000 сум</span><span class="new-price">45 000 сум</span></div></div>
+      <div class="product"><img src="dolly raquelle.jpg" alt="Dolly Raquelle"><div class="price"><span class="old-price">110 000 сум</span><span class="new-price">55 000 сум</span></div></div>
+      <div class="product"><img src="dolly stacie.jpg" alt="Dolly Stacie"><div class="price"><span class="old-price">110 000 сум</span><span class="new-price">55 000 сум</span></div></div>
+      <div class="product"><img src="apex blue.jpg" alt="Apex Blue"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="apex green.jpg" alt="Apex Green"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="apex gray.jpg" alt="Apex Gray"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="dolly teresa.jpg" alt="Dolly Teresa"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="aoki caramel.jpg" alt="Aoki Caramel"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="aoki gray.jpg" alt="Aoki Gray"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="big eye black.jpg" alt="Big Eye Black"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="k4 violet.jpg" alt="K4 Violet"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="k4 blue.jpg" alt="K4 Blue"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="k4 gray.jpg" alt="K4 Gray"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="pattaya blue.jpg" alt="Pattaya Blue"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="diamonds brown.jpg" alt="Diamonds Brown"><div class="price"><span class="old-price">130 000 сум</span><span class="new-price">65 000 сум</span></div></div>
     </div>
   </div>
 
-<div class="category">
+  <div class="category">
     <div class="category-header">
       <h2>MILK CREEK</h2>
       <span class="arrow">⌄</span>
     </div>
     <div class="products">
-      <div class="product">
-        <img src="gullah rome.jpg" alt="Gullah Rome">
-        <div class="price"><span class="old-price"></span><span class="new-price">140 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="frozen blue grey.jpg" alt="Frozen Blue Grey">
-        <div class="price"><span class="old-price"></span><span class="new-price">140 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="centripetal gravity.jpg" alt="Centripetal Gravity">
-        <div class="price"><span class="old-price"></span><span class="new-price">140 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="night magics.jpg" alt="Night Magics">
-        <div class="price"><span class="old-price"></span><span class="new-price">140 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="koi red.jpg" alt="Koi Red">
-        <div class="price"><span class="old-price"></span><span class="new-price">140 000 сум</span></div>
-      </div>
+      <div class="product"><img src="gullah rome.jpg" alt="Gullah Rome"><div class="price"><span class="old-price">140 000 сум</span><span class="new-price">84 000 сум</span></div></div>
+      <div class="product"><img src="frozen blue grey.jpg" alt="Frozen Blue Grey"><div class="price"><span class="old-price">140 000 сум</span><span class="new-price">84 000 сум</span></div></div>
+      <div class="product"><img src="centripetal gravity.jpg" alt="Centripetal Gravity"><div class="price"><span class="old-price">140 000 сум</span><span class="new-price">84 000 сум</span></div></div>
+      <div class="product"><img src="night magics.jpg" alt="Night Magics"><div class="price"><span class="old-price">140 000 сум</span><span class="new-price">84 000 сум</span></div></div>
+      <div class="product"><img src="koi red.jpg" alt="Koi Red"><div class="price"><span class="old-price">140 000 сум</span><span class="new-price">84 000 сум</span></div></div>
     </div>
   </div>
 
-<div class="category">
+  <div class="category">
     <div class="category-header">
       <h2>FRESH GO</h2>
       <span class="arrow">⌄</span>
     </div>
     <div class="products">
-      <div class="product">
-        <img src="nonno violet.jpg" alt="Nonno violet">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="nonno gray.jpg" alt="Nonno gray">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="nonno hazel.jpg" alt="Nonno hazel">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="flame blue.jpg" alt="Flame Blue">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="ring white.jpg" alt="Ring White">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="white out.jpg" alt="White Out">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="white b edge.jpg" alt="White B Edge">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="white mesh.jpg" alt="White Mesh">
-        <div class="price"><span class="old-price"></span><span class="new-price">130 000 сум</span></div>
-      </div>
+      <div class="product"><img src="nonno violet.jpg" alt="Nonno Violet"><div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div></div>
+      <div class="product"><img src="nonno gray.jpg" alt="Nonno Gray"><div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div></div>
+      <div class="product"><img src="nonno hazel.jpg" alt="Nonno Hazel"><div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div></div>
+      <div class="product"><img src="flame blue.jpg" alt="Flame Blue"><div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div></div>
+      <div class="product"><img src="ring white.jpg" alt="Ring White"><div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div></div>
+      <div class="product"><img src="white out.jpg" alt="White Out"><div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div></div>
+      <div class="product"><img src="white b edge.jpg" alt="White B Edge"><div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div></div>
+      <div class="product"><img src="white mesh.jpg" alt="White Mesh"><div class="price"><span class="old-price">130 000 сум</span><span class="new-price">78 000 сум</span></div></div>
     </div>
   </div>
 
-<div class="category">
+  <div class="category">
     <div class="category-header">
       <h2>KSSEYE</h2>
       <span class="arrow">⌄</span>
     </div>
     <div class="products">
-      <div class="product">
-        <img src="clacler brown.jpg" alt="Clacler Brown">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="clacler blue.jpg" alt="Clacler Blue">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="zurich green.jpg" alt="Zurich Geen">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="leopard gray.jpg" alt=Leopard gray">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
-      <div class="product">
-        <img src="russiangirl blue.jpg" alt="Russiangirl blue">
-        <div class="price"><span class="old-price"></span><span class="new-price">120 000 сум</span></div>
-      </div>
+      <div class="product"><img src="clacler brown.jpg" alt="Clacler Brown"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="clacler blue.jpg" alt="Clacler Blue"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="zurich green.jpg" alt="Zurich Green"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="leopard gray.jpg" alt="Leopard Gray"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
+      <div class="product"><img src="russiangirl blue.jpg" alt="Russiangirl Blue"><div class="price"><span class="old-price">120 000 сум</span><span class="new-price">60 000 сум</span></div></div>
     </div>
   </div>
 
@@ -492,6 +719,69 @@
 </footer>
 
 <script>
+/* =========================
+   THEME
+   ========================= */
+const body = document.body;
+const lightBtn = document.getElementById('lightBtn');
+const darkBtn = document.getElementById('darkBtn');
+const themeTrack = document.getElementById('themeTrack');
+
+function applyTheme(theme) {
+  const isDark = theme === 'dark';
+  body.classList.toggle('dark', isDark);
+  lightBtn.classList.toggle('active', !isDark);
+  darkBtn.classList.toggle('active', isDark);
+  localStorage.setItem('site-theme', theme);
+}
+
+const savedTheme = localStorage.getItem('site-theme');
+if (savedTheme === 'dark' || savedTheme === 'light') {
+  applyTheme(savedTheme);
+} else {
+  applyTheme('light');
+}
+
+lightBtn.addEventListener('click', () => applyTheme('light'));
+darkBtn.addEventListener('click', () => applyTheme('dark'));
+themeTrack.addEventListener('click', () => {
+  applyTheme(body.classList.contains('dark') ? 'light' : 'dark');
+});
+
+/* =========================
+   DRAWER
+   ========================= */
+const menuBtn = document.getElementById('menuBtn');
+const closeDrawerBtn = document.getElementById('closeDrawer');
+const drawer = document.getElementById('sideDrawer');
+const overlay = document.getElementById('drawerOverlay');
+
+function openDrawer() {
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+  body.classList.add('menu-open');
+  drawer.setAttribute('aria-hidden', 'false');
+  menuBtn.setAttribute('aria-expanded', 'true');
+}
+
+function closeDrawer() {
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  body.classList.remove('menu-open');
+  drawer.setAttribute('aria-hidden', 'true');
+  menuBtn.setAttribute('aria-expanded', 'false');
+}
+
+menuBtn.addEventListener('click', () => {
+  if (drawer.classList.contains('open')) closeDrawer();
+  else openDrawer();
+});
+closeDrawerBtn.addEventListener('click', closeDrawer);
+overlay.addEventListener('click', closeDrawer);
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeDrawer();
+});
+
 /* =========================
    CATEGORIES (open/close)
    ========================= */
@@ -525,15 +815,12 @@ const progressEl = document.getElementById('progress');
 
 const total = slidesEl.children.length;
 let index = 0;
-
 const durationMs = 8000;
-
 let rafId = null;
 let lastTs = 0;
 let elapsedMs = 0;
 let paused = false;
 
-/* create bars */
 for (let i = 0; i < total; i++) {
   const bar = document.createElement('div');
   bar.className = 'bar';
@@ -548,10 +835,7 @@ function paintProgress() {
   fills.forEach((f, i) => {
     if (i < index) f.style.width = '100%';
     else if (i > index) f.style.width = '0%';
-    else {
-      const pct = Math.min(100, (elapsedMs / durationMs) * 100);
-      f.style.width = pct + '%';
-    }
+    else f.style.width = Math.min(100, (elapsedMs / durationMs) * 100) + '%';
   });
 }
 
@@ -571,14 +855,10 @@ function tick(ts) {
   if (!lastTs) lastTs = ts;
   const delta = ts - lastTs;
   lastTs = ts;
-
   elapsedMs += delta;
 
-  if (elapsedMs >= durationMs) {
-    setSlide(index + 1); // строго вправо
-  } else {
-    paintProgress();
-  }
+  if (elapsedMs >= durationMs) setSlide(index + 1);
+  else paintProgress();
 
   rafId = requestAnimationFrame(tick);
 }
@@ -591,7 +871,6 @@ function start() {
 function pause() { paused = true; }
 function resume() { paused = false; lastTs = 0; }
 
-/* Swipe + hold-to-pause */
 let startX = 0;
 let isDragging = false;
 
@@ -604,13 +883,10 @@ sliderEl.addEventListener('touchstart', (e) => {
 sliderEl.addEventListener('touchend', (e) => {
   if (!isDragging) return;
   isDragging = false;
-
   const endX = e.changedTouches[0].clientX;
   const diff = startX - endX;
-
   if (diff > 50) setSlide(index + 1);
   else if (diff < -50) setSlide(index - 1);
-
   resume();
 });
 
@@ -623,17 +899,13 @@ sliderEl.addEventListener('mousedown', (e) => {
 window.addEventListener('mouseup', (e) => {
   if (!isDragging) return;
   isDragging = false;
-
   const endX = e.clientX;
   const diff = startX - endX;
-
   if (diff > 50) setSlide(index + 1);
   else if (diff < -50) setSlide(index - 1);
-
   resume();
 });
 
-/* INIT */
 setSlide(0);
 start();
 </script>
