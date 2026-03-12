@@ -5,7 +5,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
-<title>Felis Lenses</title>
+<title>Linzy_uz</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
@@ -308,6 +308,105 @@
     opacity: 0.92;
   }
 
+
+
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-soft) 78%, transparent 22%);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .02em;
+  }
+
+  .drawer-subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.45;
+    margin: 2px 0 0;
+  }
+
+  .theme-caption {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .drawer-section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .drawer-section-title strong {
+    font-size: 16px;
+  }
+
+  .soon-pill {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface) 70%, transparent 30%);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+
+  .drawer-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .drawer-mini-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: var(--text);
+    background: color-mix(in srgb, var(--surface) 65%, transparent 35%);
+    border: 1px solid var(--border);
+    transition: transform .18s ease, background .2s ease;
+  }
+
+  .drawer-mini-link:hover {
+    transform: translateX(2px);
+  }
+
+  .drawer-mini-link small {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 3px;
+  }
+
+  .drawer-arrow {
+    color: var(--muted);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .call-btn.secondary {
+    margin-top: 12px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
   /* SLIDER */
   .slider {
     width: min(100%, 1100px);
@@ -534,8 +633,9 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <div class="header-center">
-    <h1>Felis Lenses</h1>
-    <div class="slogan">Онлайн магазин контактных линз</div>
+    <h1>Linzy_uz</h1>
+    <div class="slogan">Цветные контактные линзы по всему Узбекистану</div>
+    <div class="brand-badge">Доставка • Telegram • WhatsApp</div>
   </div>
   <button class="menu-btn" id="menuBtn" type="button" aria-label="Открыть панель настроек" aria-controls="sideDrawer" aria-expanded="false">
     <span class="lines"><span></span><span></span><span></span></span>
@@ -545,12 +645,16 @@
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <aside class="drawer" id="sideDrawer" aria-hidden="true">
   <div class="drawer-top">
-    <div class="drawer-title">Панель</div>
+    <div>
+      <div class="drawer-title">Панель магазина</div>
+      <p class="drawer-subtitle">Быстрые настройки и будущие разделы для покупателей.</p>
+    </div>
     <button class="close-drawer" id="closeDrawer" type="button" aria-label="Закрыть панель">×</button>
   </div>
 
   <div class="drawer-card">
     <div class="drawer-label">Тема сайта</div>
+    <div class="theme-caption"><span>Светлая</span><span>Тёмная</span></div>
     <div class="theme-switch">
       <button type="button" class="theme-icon-btn active" id="lightBtn" aria-label="Светлая тема">☀️</button>
       <button type="button" class="theme-track" id="themeTrack" aria-label="Переключить тему">
@@ -561,15 +665,25 @@
   </div>
 
   <div class="drawer-card">
-    <a class="drawer-link" href="https://t.me/linzy_uzb" target="_blank" rel="noopener">
+    <div class="drawer-section-title">
       <strong>Карта лояльности</strong>
-      <span>@linzy_uzb</span>
-    </a>
+      <span class="soon-pill">soon</span>
+    </div>
+    <div class="drawer-list">
+      <a class="drawer-mini-link" href="https://t.me/linzy_uzb" target="_blank" rel="noopener">
+        <div>
+          <strong>Telegram магазина</strong>
+          <small>@linzy_uzb — пока здесь можно узнать про бонусы и обновления</small>
+        </div>
+        <span class="drawer-arrow">›</span>
+      </a>
+    </div>
   </div>
 
   <div class="drawer-spacer"></div>
 
   <a class="call-btn" href="tel:+998945429860">Позвонить</a>
+  <a class="call-btn secondary" href="https://t.me/linzy_uzb" target="_blank" rel="noopener">Открыть Telegram</a>
 </aside>
 
 <!-- SLIDER -->
